@@ -7,54 +7,20 @@ permissions:
     packages: write
 
 jobs:
-  release-linux-amd64:
-    name: release linux/amd64
+  releases-matrix:
+    name: Release Binary
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, darwin]
+        goarch: [amd64, arm64]
     steps:
     - uses: actions/checkout@v3
     - uses: wangyoucao577/go-release-action@v1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        goversion: 1.21
-        goos: linux
-        goarch: amd64
-        project_path: ./cmd/files-rename
-
-  release-linux-arm64:
-    name: release linux/arm64
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: wangyoucao577/go-release-action@v1
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goversion: 1.21
-        goos: linux
-        goarch: arm64
-        project_path: ./cmd/files-rename
-
-  release-darwin-amd64:
-    name: release darwin/amd64
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: wangyoucao577/go-release-action@v1
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goversion: 1.21
-        goos: darwin
-        goarch: amd64
-        project_path: ./cmd/files-rename
-
-  release-darwin-arm64:
-    name: release darwin/arm64
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: wangyoucao577/go-release-action@v1
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goversion: 1.21
-        goos: darwin
-        goarch: arm64
-        project_path: ./cmd/files-rename
+        goos: ${{ matrix.goos }}
+        goarch: ${{ matrix.goarch }}
+        goversion: "1.21.4"
+        project_path: "./cmd/files-rename"
+        binary_name: "files-rename"
